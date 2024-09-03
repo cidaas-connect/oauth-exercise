@@ -1,6 +1,6 @@
-![cidaas academy logo](https://digital-identity.io/wp-content/uploads/2022/05/cidaas-academy-1.png)
+![cidaas connect logo](https://i.postimg.cc/m2Dy7zpb/cbd752f0-a4ee-437e-9f1c-a87679a6ffed.webp)
 
-# oAuth & OIDC training
+# Deep Dive 1 - OAuth 2.1
 
 In this training you will get in touch with the main important oauth/oidc flows.
 
