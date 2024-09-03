@@ -1,0 +1,42 @@
+body {
+  font-family: arial, "lucida console", sans-serif;
+  font-size: 1.2rem;
+}
+
+h1 {
+  color: #FF9E1C;
+}
+
+.content {
+  padding: 20px;
+
+  .access-token-key {
+    font-weight: bold;
+  }
+
+  .access-token-value {
+    font-size: 1rem;
+    color: #FF9E1C;
+  }
+
+  b {
+    background-color: #c6c7c8;
+  }
+}
+
+button {
+  background-color: #34A3BB;
+  color: #fff;
+  font-weight: bold;
+  font-size: 1.3rem;
+  border: none;
+  padding: 10px 30px;
+}
+
+button:active {
+  background-color: #FF9E1C;
+}
+
+button:hover {
+  background-color: #FF9E1C;
+}

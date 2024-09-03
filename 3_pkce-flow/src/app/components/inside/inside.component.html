@@ -1,0 +1,14 @@
+<h1>Nice to meet you in here</h1>
+<p>Show me your access-token</p>
+<p><span class="access-token-key">access-token: </span> <span class="access-token-value">{{accessToken}}</span></p>
+
+
+<button (click)="callSecuredEndpoint()">call secured endpoint</button>
+<p><label>{{secured_response}}</label></p>
+<p *ngIf="status == 200"><label style="font-weight: bold; font-size: 30px; color:green">you are welcome</label></p>
+<p *ngIf="status > 400"><label style="font-weight: bold; font-size: 30px; color:red">unauthorize</label></p>
+
+
+<p>
+  <button (click)="logout()">logout</button>
+</p>

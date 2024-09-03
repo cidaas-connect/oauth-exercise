@@ -1,0 +1,21 @@
+.header {
+  overflow: hidden;
+  background-color: #fff;
+  padding: 0px 10px;
+  height: 100px;
+  border-bottom: 2px solid #f8f8f8;
+}
+
+.header a {
+  float: left;
+  text-align: center;
+}
+
+.header-center {
+  text-align: right;
+  margin-right: 30px;
+
+  h1 {
+    color: #34A3BB;
+  }
+}

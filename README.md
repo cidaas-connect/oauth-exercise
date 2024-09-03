@@ -1,93 +1,76 @@
-# oauth-exercise
+![cidaas academy logo](https://digital-identity.io/wp-content/uploads/2022/05/cidaas-academy-1.png)
 
+# oAuth & OIDC training
 
+In this training you will get in touch with the main important oauth/oidc flows.
 
-## Getting started
+> the solutions shown here follow neither clean code specifications nor angular best practice. they are just focus on the oidc flows
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+**issuer_url:**
+`https://connect-prod.cidaas.eu/`
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+**Sample Apps:**
+|exercise|client_id|client_secret|
+|------|------|------|
+|1 secured resource |7d6adc4d-c43f-40e5-aa84-c7cecce94c7c|8017dfc5-30b4-4ccc-b166-24ab90de6409|
+|2 client credential |7d6adc4d-c43f-40e5-aa84-c7cecce94c7c|8017dfc5-30b4-4ccc-b166-24ab90de6409|
+|3 PKCE |2c21b993-bc51-4ffd-8a31-a2b31701f5c6|------|
+|4 device code |ef58f89d-7e74-48ce-93c9-dce07b553378|------|
 
-## Add your files
+## Exercise 1: Secure an API by adding token check
+  
+given is a simple GET endpoint which is reachable via `http://localhost:3000/secured-resource/*` and responses a humble JSON object
+In this tasks we want to rebuild the endpoint so that only designated user and system can access it.
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+The API should only allow access for calls with token which includes role `Trainee` or scope `trainee_read`. For all others, the endpoint has to answer `401 UNAUTHORIZE`.
 
-```
-cd existing_repo
-git remote add origin https://gitlab.widas.de/cidaas-connect/oauth-exercise.git
-git branch -M master
-git push -uf origin master
-```
+### interceptor
 
-## Integrate with your tools
+The first task is to use the official cidaas-interceptor for nodejs, which does most of the work for you
+`http://localhost:3000/secured-resource/interceptor`
 
-- [ ] [Set up project integrations](https://gitlab.widas.de/cidaas-connect/oauth-exercise/-/settings/integrations)
+|start command|url|
+|------|------|
+|npm start |http://localhost:3000/secured-resource|
+  
+## Exercise 2: Create a token by using client credentials flow to call a secured API
 
-## Collaborate with your team
+given is a simple GET endpoint which is reachable via `http://localhost:3001/webhook-stuff`.  
+this service should create a client credentials token to call the endpoint from exercise 1.
+the response should be forwarded.
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+|start command|url|
+|------|------|
+|npm start |http://localhost:3001/webhook-stuff|
 
-## Test and Deploy
+## Exercise 3: create a token by using PKCE flow to call a secured API
 
-Use the built-in continuous integration in GitLab.
+given is a simple angular webapp with two different pages.
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+`/home` shows a Login-Button. After clicking the Login-Button you should start the PKCE flow, after successful login, you should redirect to /inside
+`/inside` should get a code, exchange it to an access-token and display them
 
-***
+A button on `/inside` should call our API endpoint from exercise 1 `/secured-resource`
 
-# Editing this README
+Another button will handle a logout by using the endsession call
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+> To get a clear understanding of each step of the flow it is forbidden to use any OIDC SDK.
 
-## Suggestions for a good README
+|start command|url|
+|------|------|
+|npm start |http://localhost:4200/home|
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+## OPTIONAL Exercise 4: create a token by using device code flow to call a secured API
 
-## Name
-Choose a self-explaining name for your project.
+given is a simple angular webapp with two different pages.
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+`/home` shows a Login-Button. After clicking the Login-Button you should start the device code flow and display a QR-code to open a Login Page on another device. After successful login, you should redirect to /inside
+`/inside` should get an access-token and display them
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+> To get a clear understanding of each step of the flow it is forbidden to use any OIDC SDK.
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+|start command|url|
+|------|------|
+|npm start |http://localhost:4201/home|
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+{+ Using the flow in an Angular app is not the intended solution approach and is only used here for training purposes +}
