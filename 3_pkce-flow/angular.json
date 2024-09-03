@@ -73,10 +73,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "pkce-flow:build:production"
+              "buildTarget": "pkce-flow:build:production"
             },
             "development": {
-              "browserTarget": "pkce-flow:build:development"
+              "buildTarget": "pkce-flow:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -84,7 +84,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "pkce-flow:build"
+            "buildTarget": "pkce-flow:build"
           }
         },
         "test": {
