@@ -12,20 +12,12 @@ app.use(cors({}));
  * given is a simple GET endpoint which is reachable via `http://localhost:3000/secured-resource/*` and responses a humble JSON object
  * In this tasks we want to rebuild the endpoint so that only designated user and system can access it.
  * 
- * The API should only allow access for calls with token which includes role `Trainee` or scope `trainee_read`. For all others the endpoint has to answer `401 UNAUTHORIZE`.
+ * The API should only allow access for calls with token which includes role `Trainee` or scope `profile`. For all others the endpoint has to answer `401 UNAUTHORIZE`.
  * 
- * Task 1 handmade
- * At first you should parse the token by yourself. Decode the token check if role or scope are set and check the expire-time of the token
- * `http://localhost:3000/secured-resource/handmade`
- * 
- * Task 2 interceptor
- * The second task is to use the official cidaas-interceptor for nodejs, which does most of the work for you
+ * Task interceptor
+ * The first task is to use the official cidaas-interceptor for nodejs, which does most of the work for you
  * `http://localhost:3000/secured-resource/interceptor`
  * 
- * Additional info:
- * issuer_url: https://demo.cidaas.de
- * client_id: 1e6b7c39-bafa-422d-9a97-483b8c6b2384
- * client_secret: 73de0bb6-123e-4118-9675-1fe6b6ac0e56
  */
 
 /**
@@ -55,7 +47,7 @@ app.listen(port, function () {
      * existing instance jwks are queried at server start and cached in the variable. 
      * The caching incl. cache update and the best handling with it, is not treated in the example. 
      */
-    fetch("https://demo.cidaas.de/.well-known/jwks.json", { method: "Get" }).then(res => res.json()).then(jwk => {
+    fetch("https://connect-prod.cidaas.eu/.well-known/jwks.json", { method: "Get" }).then(res => res.json()).then(jwk => {
         jwks = jwk.keys;
     });
 })

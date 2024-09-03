@@ -12,10 +12,6 @@ app.use(cors({}));
  * this service should create a client credentials token to call the endpoint from exercise 1.
  * the response should be forwarded.
  * 
- * Additional info:
- * issuer_url: https://demo.cidaas.de
- * client_id: 1e6b7c39-bafa-422d-9a97-483b8c6b2384
- * client_secret: 73de0bb6-123e-4118-9675-1fe6b6ac0e56
  */
 app.post('/webhook-stuff', (req: Request, res: Response) => {
   // insert code here
