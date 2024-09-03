@@ -1,4 +1,4 @@
-![cidaas connect logo](https://i.postimg.cc/m2Dy7zpb/cbd752f0-a4ee-437e-9f1c-a87679a6ffed.webp)
+![cidaas connect logo](https://fs.evenito.com/render/cbd752f0-a4ee-437e-9f1c-a87679a6ffed?q=80&dpr=1&h=72)
 
 # Deep Dive 1 - OAuth 2.1
 
