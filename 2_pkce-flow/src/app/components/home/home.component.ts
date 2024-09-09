@@ -16,6 +16,7 @@ export class HomeComponent implements OnInit {
   }
 
   startPKCE() {
+    console.log("Start PKCE flow");
     /**
      *
      * let state = uuidv4();
@@ -28,22 +29,12 @@ export class HomeComponent implements OnInit {
     let client_id = environment.client_id;
     let redirect_uri = environment.redirect_uri;
 
-    console.log("Start PKCE flow");
-
     let state = uuidv4();
     let code_verifier = uuidv4();
-    sessionStorage.setItem(state, code_verifier);
     let code_challenge = CryptoJS.SHA256(code_verifier).toString(CryptoJS.enc.Base64).replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
 
-    let authz = baseurl + "/authz-srv/authz?" +
-      "&response_type=code" +
-      "&client_id=" + client_id +
-      "&scope=profile roles" +
-      "&redirect_uri=" + redirect_uri +
-      "&code_challenge=" + code_challenge +
-      "&code_challenge_method=S256" +
-      "&state=" + state;
+    // TODO 2.1 store code_verifier
 
-    location.href = authz;
+    // TODO 2.2 create and call authz
   }
 }
