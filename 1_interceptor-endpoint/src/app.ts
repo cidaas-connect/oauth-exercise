@@ -1,7 +1,6 @@
+import { CidaasInterceptor, CidaasInterceptorConfig, CidaasInterceptorOptions } from 'cidaas-interceptor-nodejs';
 import cors from 'cors';
 import express, { Application, Request, Response } from 'express';
-import * as jose from 'jose';
-import fetch from 'node-fetch';
 const app: Application = express()
 const port: number = 3000
 app.use(cors({}));
@@ -14,40 +13,43 @@ app.use(cors({}));
  * 
  * The API should only allow access for calls with token which includes role `Trainee` or scope `profile`. For all others the endpoint has to answer `401 UNAUTHORIZE`.
  * 
- * Task interceptor
+ * Task: include cidaas interceptor
  * The first task is to use the official cidaas-interceptor for nodejs, which does most of the work for you
  * `http://localhost:3000/secured-resource/interceptor`
  * 
  */
 
 /**
-* existing instance jwks are queried at server start and cached in the variable. 
-* The caching incl. cache update and the best handling with it, is not treated in the example. 
+* TASK 2 use interceptor for offline token check
 */
-let jwks: jose.JWK[];
 
+// configure interceptor, only needs to be done once
+let interceptorConfig = new CidaasInterceptorConfig();
 
-/**
-* TASK 1 handmade offline token check
-*/
-app.get('/secured-resource/handmade', (req: Request, res: Response) => {
-    res.send({ result: 'I checked the token by my self' });
-})
+interceptorConfig.baseUrl = "https://connect-prod.cidaas.eu";
+interceptorConfig.tenantKey = "cidaas-connect-prod";
+interceptorConfig.client_id = "7d6adc4d-c43f-40e5-aa84-c7cecce94c7c";
+interceptorConfig.client_secret = "8017dfc5-30b4-4ccc-b166-24ab90de6409";
+
+// @ts-ignore
+interceptorConfig.validation_procedure = "introspect";
+
+// create the cidaas interceptor with the config
+let cidaas_interceptor = new CidaasInterceptor(interceptorConfig);
+
+// set intercptor options, could be different for each API endpoint
+let interceptorOptions = new CidaasInterceptorOptions();
+interceptorOptions.scopes = ["profile", "roles"];
+interceptorOptions.strictScopeValidation = true;
+interceptorOptions.interceptorConfig = interceptorConfig;
 
 /**
 * TASK 2 use interceptor for offline token check
 */
-app.get('/secured-resource/interceptor', (req: Request, res: Response) => {
+app.get('/secured-resource/interceptor', cidaas_interceptor.checkAccess(interceptorOptions), (req: Request, res: Response) => {
     res.send({ result: 'I checked the token with the cidaas-interceptor-nodejs' });
 })
 
 app.listen(port, function () {
     console.log(`secured-resource App is listening on port ${port} !`)
-    /**
-     * existing instance jwks are queried at server start and cached in the variable. 
-     * The caching incl. cache update and the best handling with it, is not treated in the example. 
-     */
-    fetch("https://connect-prod.cidaas.eu/.well-known/jwks.json", { method: "Get" }).then(res => res.json()).then(jwk => {
-        jwks = jwk.keys;
-    });
 })

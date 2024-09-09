@@ -7,19 +7,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class InsideComponent implements OnInit {
   accessToken: string = '';
-  secured_response: string = '';
-  status: number = 0;
-
   constructor() { }
 
   ngOnInit(): void {
+    this.accessToken = sessionStorage.getItem("at") || '';
   }
 
-  callSecuredEndpoint() {
-    // call /secured-resource/handmade from exercise 1
-  }
-
-  logout() {
-    // logout user
-  }
 }
