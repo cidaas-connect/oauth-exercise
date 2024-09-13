@@ -40,11 +40,11 @@ export class HomeComponent implements OnInit {
       }),
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     }).then(res => res.json()).then(response => {
-      // TODO 3.1 set attributes from response
-      this.loginURL;
-      this.deviceCode;
-      let inter;
-      let exp;
+      console.log(response);
+      this.loginURL = response.verification_uri_complete;
+      this.deviceCode = response.device_code;
+      let inter = response.interval * 1000; // to millis
+      let exp = response.expires_in * 1000; // to millis
 
       this.pollSubscription = interval(inter)
         .pipe(takeUntil(timer(exp)),
@@ -55,8 +55,11 @@ export class HomeComponent implements OnInit {
   }
 
   pollLoginStatus(): Observable<string> {
+
     let requestBody = {
-      // TODO 3.2 create req body for polling the token-srv
+      client_id: environment.client_id,
+      device_code: this.deviceCode,
+      grant_type: "urn:ietf:params:oauth:grant-type:device_code"
     }
 
     fetch(environment.baseurl + "/token-srv/token", {
@@ -68,7 +71,8 @@ export class HomeComponent implements OnInit {
           this.pollSubscription?.unsubscribe();
         }
       } else {
-        // TODO 3.3 store access_token
+        let accessToken = response.access_token;
+        sessionStorage.setItem("at", accessToken);
         this.pollSubscription?.unsubscribe();
         this.router.navigate(['/inside']);
       }

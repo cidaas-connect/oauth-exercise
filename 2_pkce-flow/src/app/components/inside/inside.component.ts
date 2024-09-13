@@ -19,9 +19,9 @@ export class InsideComponent implements OnInit {
     this.activatedRoute.queryParams.subscribe(params => {
       let code = params.code;
       let state = params.state;
-      // TODO 2.3 get code_verifier and check state
+      let code_verifier = sessionStorage.getItem(state) || "";
 
-      // TODO 2.4 call Tokenendpoint
+      this.callTokenEndpoint(code, code_verifier)
     })
   }
 
@@ -31,7 +31,7 @@ export class InsideComponent implements OnInit {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        // TODO 2.7 set token to header
+        'Authorization': 'Bearer ' + this.accessToken
       }
     }).then(r => r.json()).then(data => ({ status: data.status, body: data }))
       .then(response => {
@@ -42,20 +42,26 @@ export class InsideComponent implements OnInit {
 
   logout() {
     // logout user
-    // TODO 2.8 goto logout route, use id_token_hint
+    // add openid as scope to the authz call to get the ID token!!!
+    location.href = environment.baseurl + "/session/end_session?id_token_hint=" + this.id_token + "&post_logout_redirect_uri=http://localhost:4200/home";
   }
 
   callTokenEndpoint(code: string, code_verifier: string) {
 
     let requestBody = {
-      // TODO 2.5 create requestbody
+      client_id: environment.client_id,
+      code_verifier: code_verifier,
+      code: code,
+      grant_type: "authorization_code",
+      redirect_uri: environment.redirect_uri,
     }
 
     fetch(environment.baseurl + "/token-srv/token", {
       method: 'POST', body: JSON.stringify(requestBody),
       headers: { 'Content-Type': 'application/json' }
     }).then(res => res.json()).then(response => {
-      // TODO 2.6 handle response
+      this.accessToken = response.access_token;
+      this.id_token = response.id_token;
     })
   }
 }

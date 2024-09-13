@@ -10,8 +10,7 @@ export class InsideComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    // TODO 3.4 get stored access_token
-    this.accessToken;
+    this.accessToken = sessionStorage.getItem("at") || '';
   }
 
 }
